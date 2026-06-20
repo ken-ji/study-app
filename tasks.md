@@ -33,12 +33,12 @@
 - [x] `try/catch` で容量不足に対応
 - 完了条件: DevTools > Application > localStorage でデータの読み書きが確認できる ✅
 
-### T-011: problems ストア（Pinia）
-- [ ] `loadFromStorage()` — localStorage から問題データを読み込む
-- [ ] `importProblems(json)` — 追加インポート・重複排除（ID照合）
-- [ ] `deleteProblems(ids)` — 選択した問題を削除
-- [ ] `getByUnit(unit)` — 単元フィルタ
-- 完了条件: インポート・削除・フィルタの単体動作確認
+### T-011: problems ストア（Pinia） ✅
+- [x] `loadFromStorage()` — localStorage から問題データを読み込む
+- [x] `importProblems(json)` — 追加インポート・重複排除（ID照合）
+- [x] `deleteProblems(ids)` — 選択した問題を削除
+- [x] `getByUnit(unit)` — 単元フィルタ
+- 完了条件: インポート・削除・フィルタの単体動作確認 ✅
 
 ### T-012: stats ストア（Pinia）
 - [ ] `loadFromStorage()` — 履歴・統計を読み込む
