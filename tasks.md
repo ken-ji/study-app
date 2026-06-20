@@ -47,26 +47,26 @@
 - [x] `getStatsByUnit(unit)` — 単元ごとの統計集計
 - 完了条件: 回答記録後に正答率が正しく計算される ✅
 
-### T-013: session ストア（Pinia）
-- [ ] `startSession(mode)` — 問題を重み付きランダム抽選してキューを生成（5問 or 10問）
-- [ ] `submitAnswer(answer)` — 採点・統計記録
-- [ ] `nextQuestion()` — 次の問題へ進む
-- [ ] `isFinished` — 全問終了判定
-- 完了条件: 5問セッションを通して正常に動作する
+### T-013: session ストア（Pinia） ✅
+- [x] `startSession(mode)` — 問題を重み付きランダム抽選してキューを生成（5問 or 10問）
+- [x] `submitAnswer(answer)` — 採点・統計記録
+- [x] `nextQuestion()` — 次の問題へ進む
+- [x] `isFinished` — 全問終了判定
+- 完了条件: 5問セッションを通して正常に動作する ✅
 
 ---
 
 ## フェーズ 2: コアユーティリティ
 
-### T-020: grading.js（採点ロジック）
-- [ ] `normalize(str)` — 全角→半角変換、前後スペーストリム
-- [ ] `judge(input, answer)` — 正誤判定
-- 完了条件: 全角・半角・スペース混在の入力でも正しく判定される
+### T-020: grading.js（採点ロジック） ✅
+- [x] `normalize(str)` — 全角→半角変換、前後スペーストリム
+- [x] `judge(input, answer)` — 正誤判定
+- 完了条件: 全角・半角・スペース混在の入力でも正しく判定される ✅
 
-### T-021: selection.js（重み付きランダム抽選）
-- [ ] `calcWeight(stats)` — 重み計算（`max(1 - 正答率, 0.1)`、未挑戦は 1.0）
-- [ ] `selectQuestions(problems, stats, count)` — 重み付きランダム抽選
-- 完了条件: 正答率が低い問題が高頻度で選ばれることをテストデータで確認
+### T-021: selection.js（重み付きランダム抽選） ✅
+- [x] `calcWeight(stats)` — 重み計算（`max(1 - 正答率, 0.1)`、未挑戦は 1.0）
+- [x] `selectQuestions(problems, stats, count)` — 重み付きランダム抽選
+- 完了条件: 正答率が低い問題が高頻度で選ばれることをテストデータで確認✅
 
 ### T-022: distractors.js（誤答自動生成）
 - [ ] `generateNumeric(answer, count)` — 数値答えに対して誤答3つを生成（近い値）
