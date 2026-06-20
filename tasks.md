@@ -137,9 +137,9 @@
 
 ### T-092: GitHub Pages デプロイ ✅
 - [x] GitHub Actions ワークフロー（`.github/workflows/deploy.yml`）を作成
-- [ ] GitHub Settings > Pages > Source を「GitHub Actions」に設定（ユーザー作業）
-- [ ] 公開 URL で全機能動作確認（ユーザー作業）
-- 完了条件: 公開 URL でサンプルJSONをインポートして全機能が動作する
+- [x] GitHub Settings > Pages > Source を「GitHub Actions」に設定
+- [x] 公開 URL で全機能動作確認
+- 完了条件: 公開 URL でサンプルJSONをインポートして全機能が動作する ✅
 
 ---
 
