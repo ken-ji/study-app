@@ -135,11 +135,10 @@
 - [x] Edge 最新版で動作確認
 - [ ] Safari（可能な場合）で動作確認
 
-### T-092: GitHub Pages デプロイ
-- [ ] `npm run build` でビルド
-- [ ] GitHub リポジトリ作成
-- [ ] `gh-pages` ブランチへデプロイ（または GitHub Actions 設定）
-- [ ] 公開 URL で全機能動作確認
+### T-092: GitHub Pages デプロイ ✅
+- [x] GitHub Actions ワークフロー（`.github/workflows/deploy.yml`）を作成
+- [ ] GitHub Settings > Pages > Source を「GitHub Actions」に設定（ユーザー作業）
+- [ ] 公開 URL で全機能動作確認（ユーザー作業）
 - 完了条件: 公開 URL でサンプルJSONをインポートして全機能が動作する
 
 ---
