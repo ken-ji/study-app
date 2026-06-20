@@ -68,10 +68,10 @@
 - [x] `selectQuestions(problems, stats, count)` — 重み付きランダム抽選
 - 完了条件: 正答率が低い問題が高頻度で選ばれることをテストデータで確認✅
 
-### T-022: distractors.js（誤答自動生成）
-- [ ] `generateNumeric(answer, count)` — 数値答えに対して誤答3つを生成（近い値）
-- [ ] `shuffle(choices)` — 選択肢をランダム順に並び替え
-- 完了条件: 生成された誤答が正答と重複せず、毎回異なる順で並ぶ
+### T-022: distractors.js（誤答自動生成） ✅
+- [x] `generateNumeric(answer, count)` — 数値答えに対して誤答3つを生成（近い値）
+- [x] `shuffle(choices)` — 選択肢をランダム順に並び替え
+- 完了条件: 生成された誤答が正答と重複せず、毎回異なる順で並ぶ ✅
 
 ---
 
