@@ -40,12 +40,12 @@
 - [x] `getByUnit(unit)` — 単元フィルタ
 - 完了条件: インポート・削除・フィルタの単体動作確認 ✅
 
-### T-012: stats ストア（Pinia）
-- [ ] `loadFromStorage()` — 履歴・統計を読み込む
-- [ ] `recordAnswer(problemId, answer, isCorrect)` — 回答を記録し統計を更新
-- [ ] `getStatsByProblem(id)` — 問題ごとの統計取得
-- [ ] `getStatsByUnit(unit)` — 単元ごとの統計集計
-- 完了条件: 回答記録後に正答率が正しく計算される
+### T-012: stats ストア（Pinia） ✅
+- [x] `loadFromStorage()` — 履歴・統計を読み込む
+- [x] `recordAnswer(problemId, answer, isCorrect)` — 回答を記録し統計を更新
+- [x] `getStatsByProblem(id)` — 問題ごとの統計取得
+- [x] `getStatsByUnit(unit)` — 単元ごとの統計集計
+- 完了条件: 回答記録後に正答率が正しく計算される ✅
 
 ### T-013: session ストア（Pinia）
 - [ ] `startSession(mode)` — 問題を重み付きランダム抽選してキューを生成（5問 or 10問）
