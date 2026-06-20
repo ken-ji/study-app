@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-8" style="max-width: 640px;">
+  <v-container v-if="currentQuestion" class="py-8" style="max-width: 640px;">
 
     <!-- 進捗 -->
     <div class="d-flex align-center justify-space-between mb-4">
