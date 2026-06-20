@@ -28,10 +28,10 @@
 
 ## フェーズ 1: データ層
 
-### T-010: localStorage ユーティリティ
-- [ ] `studyApp_problems`、`studyApp_history`、`studyApp_stats` の読み書き関数を実装
-- [ ] `try/catch` で容量不足に対応
-- 完了条件: DevTools > Application > localStorage でデータの読み書きが確認できる
+### T-010: localStorage ユーティリティ ✅
+- [x] `studyApp_problems`、`studyApp_history`、`studyApp_stats` の読み書き関数を実装
+- [x] `try/catch` で容量不足に対応
+- 完了条件: DevTools > Application > localStorage でデータの読み書きが確認できる ✅
 
 ### T-011: problems ストア（Pinia）
 - [ ] `loadFromStorage()` — localStorage から問題データを読み込む
