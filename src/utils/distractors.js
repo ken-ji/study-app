@@ -7,24 +7,41 @@ function shuffle(array) {
   return arr
 }
 
+function calcStep(num) {
+  const abs = Math.abs(num)
+  if (abs <= 20) return 1
+  return Math.max(2, Math.round((abs * abs) / 2000))
+}
+
+function fmt(num, c) {
+  return Number.isInteger(num) ? String(Math.round(c)) : String(c)
+}
+
 function generateNumericDistractors(answer, count) {
   const num = parseFloat(answer)
   if (isNaN(num)) return null
 
-  const candidates = []
-  for (let diff = 1; candidates.length < count * 4; diff++) {
-    candidates.push(num + diff, num - diff)
+  const seen = new Set([num])
+  const distractors = []
+
+  // 符号反転を最初の誤答として追加（0以外）
+  if (num !== 0) {
+    const rev = -num
+    if (!seen.has(rev)) {
+      seen.add(rev)
+      distractors.push(fmt(num, rev))
+    }
   }
 
-  const distractors = []
-  const seen = new Set([num])
-  for (const c of candidates) {
-    if (!seen.has(c) && distractors.length < count) {
-      seen.add(c)
-      // 元の答えが整数なら整数で返す
-      distractors.push(Number.isInteger(num) ? String(Math.round(c)) : String(c))
+  // 残りをステップベースで埋める
+  const step = calcStep(num)
+  for (let i = 1; distractors.length < count; i++) {
+    for (const c of [num + step * i, num - step * i]) {
+      if (!seen.has(c) && distractors.length < count) {
+        seen.add(c)
+        distractors.push(fmt(num, c))
+      }
     }
-    if (distractors.length >= count) break
   }
 
   return distractors
