@@ -110,7 +110,7 @@ App.vue
 stores/
 ├── problems.js      問題データ管理
 │   - state: problems[]
-│   - actions: loadFromStorage(), importProblems(json), deleteProblems(ids)
+│   - actions: loadFromStorage(), importProblems(json), deleteProblems(ids), updateProblem(id, data)
 │   - getters: getByUnit(unit)
 │
 ├── session.js       演習セッション管理

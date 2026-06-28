@@ -47,5 +47,12 @@ export const useProblemsStore = defineStore('problems', {
       this.problems = this.problems.filter((p) => !deleteSet.has(p.id))
       setProblems(this.problems)
     },
+
+    updateProblem(id, data) {
+      const index = this.problems.findIndex((p) => p.id === id)
+      if (index === -1) return
+      this.problems[index] = { ...this.problems[index], ...data }
+      setProblems(this.problems)
+    },
   },
 })

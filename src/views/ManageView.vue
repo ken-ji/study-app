@@ -58,6 +58,7 @@
               <th style="width: 130px;">単元</th>
               <th>問題文</th>
               <th style="width: 60px;" class="text-center">種別</th>
+              <th style="width: 52px;"></th>
             </tr>
           </thead>
           <tbody>
@@ -77,12 +78,75 @@
                   {{ problem.type === 'choice' ? '4択' : '入力' }}
                 </v-chip>
               </td>
+              <td class="text-center">
+                <v-btn
+                  icon="mdi-pencil"
+                  size="small"
+                  variant="text"
+                  @click="openEdit(problem)"
+                />
+              </td>
             </tr>
           </tbody>
         </v-table>
       </v-card>
 
     </template>
+
+    <!-- 編集ダイアログ -->
+    <v-dialog v-model="editDialog" max-width="560">
+      <v-card v-if="editForm">
+        <v-card-title class="text-h6 pa-4">問題を編集</v-card-title>
+        <v-card-text class="pb-0">
+          <v-row dense>
+            <v-col cols="8">
+              <v-text-field
+                v-model="editForm.unit"
+                label="単元"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+            <v-col cols="4">
+              <v-select
+                v-model="editForm.type"
+                :items="[{ title: '4択', value: 'choice' }, { title: '記述', value: 'text' }]"
+                label="種別"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+          </v-row>
+          <v-textarea
+            v-model="editForm.question"
+            label="問題文"
+            variant="outlined"
+            density="compact"
+            rows="3"
+            auto-grow
+          />
+          <v-text-field
+            v-model="editForm.answer"
+            label="正答"
+            variant="outlined"
+            density="compact"
+          />
+          <v-textarea
+            v-model="editForm.explanation"
+            label="解説"
+            variant="outlined"
+            density="compact"
+            rows="3"
+            auto-grow
+          />
+        </v-card-text>
+        <v-card-actions class="pa-4">
+          <v-spacer />
+          <v-btn variant="text" @click="editDialog = false">キャンセル</v-btn>
+          <v-btn color="primary" variant="elevated" @click="saveEdit">保存</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- 削除確認ダイアログ -->
     <v-dialog v-model="confirmDialog" max-width="400">
@@ -112,6 +176,8 @@ const problemsStore = useProblemsStore()
 const selectedUnit = ref('all')
 const checkedIds = ref(new Set())
 const confirmDialog = ref(false)
+const editDialog = ref(false)
+const editForm = ref(null)
 
 onMounted(() => {
   problemsStore.loadFromStorage()
@@ -156,5 +222,23 @@ function deleteSelected() {
   problemsStore.deleteProblems([...checkedIds.value])
   checkedIds.value = new Set()
   confirmDialog.value = false
+}
+
+function openEdit(problem) {
+  editForm.value = {
+    unit: problem.unit,
+    type: problem.type,
+    question: problem.question,
+    answer: problem.answer,
+    explanation: problem.explanation,
+    _id: problem.id,
+  }
+  editDialog.value = true
+}
+
+function saveEdit() {
+  const { _id, ...data } = editForm.value
+  problemsStore.updateProblem(_id, data)
+  editDialog.value = false
 }
 </script>
