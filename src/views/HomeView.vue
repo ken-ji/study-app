@@ -9,7 +9,7 @@
           インポート済み {{ problemsStore.problems.length }} 問
         </v-chip>
       </v-card-text>
-      <v-card-actions class="pa-4">
+      <v-card-actions class="pa-4 ga-2 flex-wrap">
         <v-btn
           color="secondary"
           variant="outlined"
@@ -17,6 +17,15 @@
           @click="triggerImport"
         >
           JSONを読み込む
+        </v-btn>
+        <v-btn
+          color="secondary"
+          variant="outlined"
+          prepend-icon="mdi-download"
+          :disabled="problemsStore.problems.length === 0"
+          @click="handleExport"
+        >
+          JSONでエクスポート
         </v-btn>
         <input
           ref="fileInput"
@@ -129,6 +138,22 @@ async function handleImport(event) {
   } catch {
     showSnackbar('JSONの読み込みに失敗しました。ファイルを確認してください。', 'error')
   }
+}
+
+function handleExport() {
+  if (problemsStore.problems.length === 0) {
+    showSnackbar('エクスポートする問題がありません', 'error')
+    return
+  }
+  const json = JSON.stringify(problemsStore.problems, null, 2)
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `study-app-problems-${new Date().toISOString().slice(0, 10)}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+  showSnackbar(`${problemsStore.problems.length}問をエクスポートしました`, 'success')
 }
 
 function startSession(count) {
