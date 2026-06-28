@@ -3,6 +3,41 @@
 
     <h1 class="text-h5 mb-6">問題管理</h1>
 
+    <!-- フィルタ・操作バー（常時表示） -->
+    <div class="d-flex align-center ga-3 mb-4 flex-wrap">
+      <v-select
+        v-model="selectedUnit"
+        :items="unitOptions"
+        label="単元で絞り込む"
+        variant="outlined"
+        density="compact"
+        hide-details
+        style="max-width: 240px;"
+        :disabled="problemsStore.problems.length === 0"
+      />
+      <v-spacer />
+      <span class="text-body-2 text-medium-emphasis">
+        {{ filteredProblems.length }}問 / {{ checkedIds.size }}件選択中
+      </span>
+      <v-btn
+        color="primary"
+        variant="elevated"
+        prepend-icon="mdi-plus"
+        @click="openNew"
+      >
+        追加
+      </v-btn>
+      <v-btn
+        color="error"
+        variant="elevated"
+        :disabled="checkedIds.size === 0"
+        prepend-icon="mdi-delete"
+        @click="confirmDialog = true"
+      >
+        削除
+      </v-btn>
+    </div>
+
     <!-- データなし -->
     <v-alert
       v-if="problemsStore.problems.length === 0"
@@ -10,93 +45,69 @@
       variant="tonal"
       icon="mdi-information"
     >
-      問題データがありません。トップ画面からJSONをインポートしてください。
+      問題データがありません。「追加」ボタンで問題を作成するか、トップ画面からJSONをインポートしてください。
     </v-alert>
 
-    <template v-else>
-
-      <!-- フィルタ・操作バー -->
-      <div class="d-flex align-center ga-3 mb-4 flex-wrap">
-        <v-select
-          v-model="selectedUnit"
-          :items="unitOptions"
-          label="単元で絞り込む"
-          variant="outlined"
-          density="compact"
-          hide-details
-          style="max-width: 240px;"
-        />
-        <v-spacer />
-        <span class="text-body-2 text-medium-emphasis">
-          {{ filteredProblems.length }}問 / {{ checkedIds.size }}件選択中
-        </span>
-        <v-btn
-          color="error"
-          variant="elevated"
-          :disabled="checkedIds.size === 0"
-          prepend-icon="mdi-delete"
-          @click="confirmDialog = true"
-        >
-          削除
-        </v-btn>
-      </div>
-
-      <!-- 問題テーブル -->
-      <v-card elevation="1">
-        <v-table>
-          <thead>
-            <tr>
-              <th style="width: 48px;">
-                <v-checkbox
-                  :model-value="allChecked"
-                  :indeterminate="someChecked"
-                  hide-details
-                  @change="toggleAll"
-                />
-              </th>
-              <th style="width: 110px;">ID</th>
-              <th style="width: 130px;">単元</th>
-              <th>問題文</th>
-              <th style="width: 60px;" class="text-center">種別</th>
-              <th style="width: 52px;"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="problem in filteredProblems" :key="problem.id">
-              <td>
-                <v-checkbox
-                  :model-value="checkedIds.has(problem.id)"
-                  hide-details
-                  @change="toggleOne(problem.id)"
-                />
-              </td>
-              <td class="text-caption text-medium-emphasis">{{ problem.id }}</td>
-              <td class="text-body-2">{{ problem.unit }}</td>
-              <td class="text-body-2">{{ problem.question }}</td>
-              <td class="text-center">
-                <v-chip size="x-small" :color="problem.type === 'choice' ? 'primary' : 'secondary'" variant="tonal">
-                  {{ problem.type === 'choice' ? '4択' : '入力' }}
-                </v-chip>
-              </td>
-              <td class="text-center">
-                <v-btn
-                  icon="mdi-pencil"
-                  size="small"
-                  variant="text"
-                  @click="openEdit(problem)"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
-      </v-card>
-
-    </template>
+    <!-- 問題テーブル -->
+    <v-card v-if="problemsStore.problems.length > 0" elevation="1">
+      <v-table>
+        <thead>
+          <tr>
+            <th style="width: 48px;">
+              <v-checkbox
+                :model-value="allChecked"
+                :indeterminate="someChecked"
+                hide-details
+                @change="toggleAll"
+              />
+            </th>
+            <th style="width: 110px;">ID</th>
+            <th style="width: 130px;">単元</th>
+            <th>問題文</th>
+            <th style="width: 60px;" class="text-center">種別</th>
+            <th style="width: 88px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="problem in filteredProblems" :key="problem.id">
+            <td>
+              <v-checkbox
+                :model-value="checkedIds.has(problem.id)"
+                hide-details
+                @change="toggleOne(problem.id)"
+              />
+            </td>
+            <td class="text-caption text-medium-emphasis">{{ problem.id }}</td>
+            <td class="text-body-2">{{ problem.unit }}</td>
+            <td class="text-body-2">{{ problem.question }}</td>
+            <td class="text-center">
+              <v-chip size="x-small" :color="problem.type === 'choice' ? 'primary' : 'secondary'" variant="tonal">
+                {{ problem.type === 'choice' ? '4択' : '入力' }}
+              </v-chip>
+            </td>
+            <td class="text-center">
+              <v-btn
+                icon="mdi-pencil"
+                size="small"
+                variant="text"
+                @click="openEdit(problem)"
+              />
+              <v-btn
+                icon="mdi-content-copy"
+                size="small"
+                variant="text"
+                @click="openCopy(problem)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+    </v-card>
 
     <!-- 編集ダイアログ -->
     <v-dialog v-model="editDialog" max-width="560">
       <v-card v-if="editForm">
-        <v-card-title class="text-h6 pa-4">問題を編集</v-card-title>
+        <v-card-title class="text-h6 pa-4">{{ editDialogTitle }}</v-card-title>
         <v-card-text class="pb-0">
           <v-row dense>
             <v-col cols="8">
@@ -143,7 +154,7 @@
         <v-card-actions class="pa-4">
           <v-spacer />
           <v-btn variant="text" @click="editDialog = false">キャンセル</v-btn>
-          <v-btn color="primary" variant="elevated" @click="saveEdit">保存</v-btn>
+          <v-btn color="primary" variant="elevated" :disabled="!editForm?.question || !editForm?.answer" @click="saveEdit">保存</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -178,6 +189,7 @@ const checkedIds = ref(new Set())
 const confirmDialog = ref(false)
 const editDialog = ref(false)
 const editForm = ref(null)
+const editMode = ref('edit') // 'edit' | 'new' | 'copy'
 
 onMounted(() => {
   problemsStore.loadFromStorage()
@@ -225,6 +237,7 @@ function deleteSelected() {
 }
 
 function openEdit(problem) {
+  editMode.value = 'edit'
   editForm.value = {
     unit: problem.unit,
     type: problem.type,
@@ -236,9 +249,38 @@ function openEdit(problem) {
   editDialog.value = true
 }
 
+function openNew() {
+  editMode.value = 'new'
+  editForm.value = { unit: '', type: 'text', question: '', answer: '', explanation: '', _id: null }
+  editDialog.value = true
+}
+
+function openCopy(problem) {
+  editMode.value = 'copy'
+  editForm.value = {
+    unit: problem.unit,
+    type: problem.type,
+    question: problem.question,
+    answer: problem.answer,
+    explanation: problem.explanation,
+    _id: null,
+  }
+  editDialog.value = true
+}
+
 function saveEdit() {
   const { _id, ...data } = editForm.value
-  problemsStore.updateProblem(_id, data)
+  if (editMode.value === 'edit') {
+    problemsStore.updateProblem(_id, data)
+  } else {
+    problemsStore.addProblem(data)
+  }
   editDialog.value = false
 }
+
+const editDialogTitle = computed(() => {
+  if (editMode.value === 'new') return '問題を追加'
+  if (editMode.value === 'copy') return '問題をコピー'
+  return '問題を編集'
+})
 </script>

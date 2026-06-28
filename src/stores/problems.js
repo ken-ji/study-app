@@ -48,6 +48,12 @@ export const useProblemsStore = defineStore('problems', {
       setProblems(this.problems)
     },
 
+    addProblem(data) {
+      const problem = { id: crypto.randomUUID(), ...data }
+      this.problems.push(problem)
+      setProblems(this.problems)
+    },
+
     updateProblem(id, data) {
       const index = this.problems.findIndex((p) => p.id === id)
       if (index === -1) return
