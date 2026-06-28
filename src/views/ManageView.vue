@@ -109,6 +109,14 @@
       <v-card v-if="editForm">
         <v-card-title class="text-h6 pa-4">{{ editDialogTitle }}</v-card-title>
         <v-card-text class="pb-0">
+          <v-text-field
+            v-if="editMode !== 'edit'"
+            v-model="editForm.id"
+            label="ID"
+            variant="outlined"
+            density="compact"
+            placeholder="例: MATH101"
+          />
           <v-row dense>
             <v-col cols="8">
               <v-text-field
@@ -154,7 +162,7 @@
         <v-card-actions class="pa-4">
           <v-spacer />
           <v-btn variant="text" @click="editDialog = false">キャンセル</v-btn>
-          <v-btn color="primary" variant="elevated" :disabled="!editForm?.question || !editForm?.answer" @click="saveEdit">保存</v-btn>
+          <v-btn color="primary" variant="elevated" :disabled="!editForm?.question || !editForm?.answer || (editMode !== 'edit' && !editForm?.id)" @click="saveEdit">保存</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -175,11 +183,15 @@
       </v-card>
     </v-dialog>
 
+    <v-snackbar v-model="snackbar.show" color="error" timeout="3000">
+      {{ snackbar.message }}
+    </v-snackbar>
+
   </v-container>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import { useProblemsStore } from '../stores/problems.js'
 
 const problemsStore = useProblemsStore()
@@ -190,6 +202,7 @@ const confirmDialog = ref(false)
 const editDialog = ref(false)
 const editForm = ref(null)
 const editMode = ref('edit') // 'edit' | 'new' | 'copy'
+const snackbar = reactive({ show: false, message: '' })
 
 onMounted(() => {
   problemsStore.loadFromStorage()
@@ -251,13 +264,14 @@ function openEdit(problem) {
 
 function openNew() {
   editMode.value = 'new'
-  editForm.value = { unit: '', type: 'text', question: '', answer: '', explanation: '', _id: null }
+  editForm.value = { id: '', unit: '', type: 'text', question: '', answer: '', explanation: '', _id: null }
   editDialog.value = true
 }
 
 function openCopy(problem) {
   editMode.value = 'copy'
   editForm.value = {
+    id: problem.id + '_copy',
     unit: problem.unit,
     type: problem.type,
     question: problem.question,
@@ -272,10 +286,16 @@ function saveEdit() {
   const { _id, ...data } = editForm.value
   if (editMode.value === 'edit') {
     problemsStore.updateProblem(_id, data)
+    editDialog.value = false
   } else {
-    problemsStore.addProblem(data)
+    const ok = problemsStore.addProblem(data)
+    if (!ok) {
+      snackbar.message = `ID「${data.id}」はすでに使われています`
+      snackbar.show = true
+      return
+    }
+    editDialog.value = false
   }
-  editDialog.value = false
 }
 
 const editDialogTitle = computed(() => {

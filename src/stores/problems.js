@@ -49,9 +49,10 @@ export const useProblemsStore = defineStore('problems', {
     },
 
     addProblem(data) {
-      const problem = { id: crypto.randomUUID(), ...data }
-      this.problems.push(problem)
+      if (this.problems.some((p) => p.id === data.id)) return false
+      this.problems.push({ ...data })
       setProblems(this.problems)
+      return true
     },
 
     updateProblem(id, data) {
